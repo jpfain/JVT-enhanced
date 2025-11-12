@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Jehovah’s View of Time</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Progressive Web App setup -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Jehovah’s View of Time">
+  <meta name="theme-color" content="#007bff">
+  <meta name="background-color" content="#007bff">
+
+  <!-- App Icons -->
+  <link rel="apple-touch-icon" href="icons/apple-icon-180.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="icons/apple-icon-167.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/apple-icon-152.png">
+  <link rel="icon" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" sizes="512x512" href="icons/icon-512.png">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #eaf3ff, #f9fbff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      min-height: 100dvh;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    .hidden { display: none !important; }
+    .fade-out { opacity: 0; pointer-events: none; }
+
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 34px;
+      box-shadow: 0 6px 22px rgba(2, 6, 23, 0.06);
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+      position: relative;
+      z-index: 0;
+    }
+    .card.show { opacity: 1; }
+    .card.active { z-index: 10; }
+
+    h2 { margin: 0 0 20px; color: #2c3e50; font-size: 1.3rem; }
+
+    input, select, button {
+      font-size: 16px;
+      padding: 12px 14px;
+      margin: 6px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      box-sizing: border-box;
+    }
+
+    input { width: 100%; max-width: 320px; text-align: center; }
+
+    button {
+      min-width: 120px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.12);
+      transition: background 0.2s ease;
+    }
+    button:active { transform: translateY(1px); }
+
+    .nav-btn {
+      background: #6da9ff;
+      font-size: 15px;
+      padding: 10px 12px;
+      width: auto;
+      min-width: 0;
+    }
+    .nav-btn:hover { background: #5b96eb; }
+
+    #result {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0b1220;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 300ms, transform 300ms;
+    }
+    #result.show { opacity: 1; transform: translateY(0); }
+
+    .footer-watermark {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      font-size: 0.85rem;
+      color: rgba(15, 23, 42, 0.45);
+      font-style: italic;
+      pointer-events: none;
+    }
+    .footer-watermark.show { opacity: 1; }
+
+    .input-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .input-row input { flex: 1 1 60%; max-width: 220px; }
+    .input-row select { font-size: 1.1rem; padding: 8px 10px; }
+
+    /* Modal */
+    #infoModal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.35);
+      padding: 18px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+      z-index: 99999;
+      pointer-events: none;
+    }
+    #infoModal.show {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+      pointer-events: auto;
+    }
+    #infoModal .modal-card {
+      width: 100%;
+      max-width: 540px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      transform: scale(0.9);
+      transition: transform 0.25s ease;
+      position: relative;
+    }
+    #infoModal.show .modal-card { transform: scale(1); }
+    /* Position Close button neatly in top-right of modal */
+#infoModal .modal-card {
+  position: relative;
+}
+
+#infoModal .modal-card button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+#infoModal .modal-card button:hover {
+  background: #005fcc;
+}
+
+
+    @media (prefers-color-scheme: dark) {
+      body { background: linear-gradient(135deg, #101214, #171a1d); color: #e6eef9; }
+      .card { background: #151718; }
+      input { background: #1f2326; border: 1px solid #2b2f33; color: #e6eef9; }
+      #infoModal .modal-card { background: #171a1d; color: #e6eef9; }
+      .footer-watermark { color: rgba(230,238,249,0.35); }
+    }
+
+/* Match BCE/CE Reset button with Age form styling */
+#newDateBtn {
+  background: #fff !important;
+  color: #007bff !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.12);
+}
+#newDateBtn:active {
+  transform: translateY(1px);
+}
+
+  </style>
+</head>
+
+<body>
+  <!-- Splash -->
+  <div id="splash" style="position:fixed;inset:0;background:#007bff;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Playfair Display',serif;z-index:9999;transition:opacity 1.5s ease;">
+    <div style="width:110px;height:110px;background:#fff;border-radius:26px;display:flex;align-items:center;justify-content:center;color:#007bff;font-size:2.8rem;font-weight:800;margin-bottom:22px;">⏳</div>
+    <h1>Jehovah’s View of Time</h1>
+  </div>
+
+  <!-- Age Calculator -->
+  <div class="card active" id="age-card">
+    <h2>How old are you in Jehovah's eyes?</h2>
+    <input id="age" inputmode="decimal" pattern="[0-9,.]*" placeholder="Enter your age" step="0.01" min="0">
+    <div style="margin-top:8px">
+      <button onclick="convert()">Calculate</button>
+      <button id="reset-btn" style="display:none;background:#fff;color:#007bff;border:1px solid #d1d5db" onclick="resetForm()">Reset</button>
+    </div>
+    <div id="output-area">
+      <span id="label"></span>
+      <div id="result"></div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="nav-btn" onclick="openBCE()">Open BCE/CE Calculator</button>
+    </div>
+    <div class="more-info">
+      <a href="#" onclick="openModal(); return false;">More Information</a>
+    </div>
+  </div>
+
+  <!-- BCE / CE Calculator -->
+  <div class="card hidden" id="bce-card" style="opacity:0;">
+  <h2>BCE/CE Years Calculator</h2>
+
+  <div class="input-row">
+    <input
+  id="yearInput"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  placeholder="Enter date (e.g. 607)"
+>
+
+    <select id="eraInput">
+      <option value="BCE">BCE</option>
+      <option value="CE" selected>CE</option>
+    </select>
+  </div>
+
+  <div style="margin-top:12px;">
+    <button id="calcBtn" onclick="calculateYears()">Calculate</button>
+    <button
+      id="newDateBtn"
+      style="display:none;background:#fff;color:#007bff;border:1px solid #d1d5db"
+      onclick="resetFormBCE()"
+    >Reset</button>
+  </div>
+
+  <div
+    id="resultBCE"
+    style="margin-top:24px;font-size:1.1em;color:#0b1220;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;"
+  ></div>
+  <div
+    id="ratio"
+    style="margin-top:12px;font-size:1em;color:#555;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;"
+  ></div>
+
+  <div style="margin-top:16px">
+    <button class="nav-btn" onclick="openAge()">Back to Age Calculator</button>
+  </div>
+</div>
+
+
+  <!-- Info Modal -->
+  <div id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <div class="modal-card">
+      <h3 id="infoTitle">Jehovah's View of Time</h3>
+      <p>The Bible tells us that "one day is with Jehovah as a thousand years." (2 Pet 3:8; Ps 90:4)
+         Understandably, His view of time would differ from ours because He is eternal.</p>
+      <p>Therefore, <strong>41.656 years = 1 hour</strong>, and <strong>0.694 years = 1 minute</strong> in Jehovah's eyes.</p>
+
+      <button onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <div class="footer-watermark" id="footer-watermark">Jehovah’s View of Time</div>
+
+  <script>
+    // Splash
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash');
+        splash.style.opacity = '0';
+        setTimeout(() => {
+          splash.remove();
+          document.getElementById('age-card').classList.add('show');
+          document.getElementById('footer-watermark').classList.add('show');
+        }, 1500);
+      }, 2000);
+    });
+
+    // Age Calculator
+    function convert() {
+      const raw = document.getElementById('age').value.replace(/,/g, '');
+      const age = parseFloat(raw);
+      if (isNaN(age) || age < 0) { alert('Please enter a valid number'); return; }
+      const totalHours = age / 41.656;
+      let D = Math.floor(totalHours / 24);
+      let H = Math.floor(totalHours % 24);
+      let M = Math.floor((totalHours * 60) % 60);
+      let S = Math.round((totalHours * 3600) % 60);
+      if (S === 60) { S = 0; M += 1; }
+      if (M === 60) { M = 0; H += 1; }
+      if (H === 24) { H = 0; D += 1; }
+      let output = '';
+      if (D > 0) output = `${D} day${D!==1?'s':''} ${H} hour${H!==1?'s':''}`;
+      else if (H > 0) output = `${H} hour${H!==1?'s':''} ${M} minute${M!==1?'s':''}`;
+      else output = `${M} minute${M!==1?'s':''} ${S} second${S!==1?'s':''}`;
+      document.getElementById('label').innerText = "Your age in Jehovah’s eyes:";
+      const r = document.getElementById('result');
+      r.classList.remove('show'); r.textContent = output;
+      setTimeout(() => r.classList.add('show'), 30);
+      document.getElementById('reset-btn').style.display = 'inline-block';
+    }
+    function resetForm() {
+      document.getElementById('age').value = '';
+      document.getElementById('label').innerText = '';
+      document.getElementById('result').innerText = '';
+      document.getElementById('reset-btn').style.display = 'none';
+    }
+
+    // Card switching
+    function openBCE() {
+      const a = document.getElementById('age-card'), b = document.getElementById('bce-card');
+      a.classList.remove('active'); b.classList.add('active');
+      a.style.opacity = '0';
+      setTimeout(() => { a.classList.add('hidden'); b.classList.remove('hidden'); setTimeout(()=>{b.style.opacity='1';},50); },400);
+    }
+    function openAge() {
+      const a = document.getElementById('age-card'), b = document.getElementById('bce-card');
+      b.classList.remove('active'); a.classList.add('active');
+      b.style.opacity = '0';
+      setTimeout(() => { b.classList.add('hidden'); a.classList.remove('hidden'); setTimeout(()=>{a.style.opacity='1';},50); },400);
+    }
+
+    // BCE/CE Calculator
+    function calculateYears() {
+      const yv = document.getElementById('yearInput').value, era = document.getElementById('eraInput').value;
+      const resultEl = document.getElementById('resultBCE'), ratioEl = document.getElementById('ratio');
+      const calcBtn = document.getElementById('calcBtn'), newDateBtn = document.getElementById('newDateBtn');
+      const year = parseInt(yv,10);
+      if (isNaN(year)) { resultEl.textContent="Please enter a valid year."; ratioEl.textContent=""; return; }
+      if (year < 1) { resultEl.textContent = `Please enter a year of 1 or greater for ${era}.`; ratioEl.textContent = ""; return; }
+      const current = new Date().getFullYear();
+      const numericYear = (era === "BCE") ? -year + 1 : year;
+      const diff = current - numericYear;
+      const absDiff = Math.abs(diff);
+      if (diff >= 0) {
+        resultEl.innerHTML = `The year <strong>${year} ${era}</strong> was <strong>${diff.toLocaleString()}</strong> years ago (as of ${current} CE).`;
+      } else {
+        resultEl.innerHTML = `The year <strong>${year} ${era}</strong> is in <strong>${absDiff.toLocaleString()}</strong> years (as of ${current} CE).`;
+      }
+      const daysJehovah = absDiff / 1000;
+      const roundedDays = Math.floor(daysJehovah);
+      const hrs = (daysJehovah * 24) % 24;
+      const mins = (hrs % 1) * 60;
+      const parts = [];
+      if (roundedDays > 0) parts.push(`${roundedDays} day${roundedDays!==1?'s':''}`);
+      if (Math.floor(hrs) > 0) parts.push(`${Math.floor(hrs)} hour${Math.floor(hrs)!==1?'s':''}`);
+      parts.push(`${Math.floor(mins)} minute${Math.floor(mins)!==1?'s':''}`);
+      const formatted = parts.length>1?parts.slice(0,-1).join(' ')+' and '+parts.slice(-1):parts[0];
+      ratioEl.innerHTML = diff >= 0
+        ? `In Jehovah’s view, that’s <strong>${formatted}</strong>.`
+        : `In Jehovah’s view, that’s in <strong>${formatted}</strong>.`;
+      resultEl.style.opacity='0'; ratioEl.style.opacity='0'; resultEl.style.transform='translateY(8px)'; ratioEl.style.transform='translateY(8px)';
+      setTimeout(()=>{resultEl.style.opacity='1';resultEl.style.transform='translateY(0)';},50);
+      setTimeout(()=>{ratioEl.style.opacity='1';ratioEl.style.transform='translateY(0)';},350);
+      calcBtn.style.display='none'; newDateBtn.style.display='inline-block';
+    }
+    function resetFormBCE() {
+      document.getElementById('yearInput').value=''; document.getElementById('resultBCE').textContent=''; document.getElementById('ratio').textContent='';
+      document.getElementById('calcBtn').style.display='inline-block'; document.getElementById('newDateBtn').style.display='none';
+    }
+
+    // Modal
+    let __lastFocused = null;
+    let __modalKeyHandler = null;
+    function openModal() {
+      const modal = document.getElementById('infoModal');
+      __lastFocused = document.activeElement;
+      modal.classList.add('show');
+      document.body.style.overflow='hidden';
+      const focusables = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (first) first.focus();
+      __modalKeyHandler = (e) => {
+        if (e.key === 'Escape') { closeModal(); }
+        if (e.key === 'Tab') {
+          if (focusables.length === 0) { e.preventDefault(); return; }
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      };
+      document.addEventListener('keydown', __modalKeyHandler);
+      modal.addEventListener('click', (ev) => { if (ev.target === modal) closeModal(); }, { once: true });
+    }
+    function closeModal() {
+      const modal = document.getElementById('infoModal');
+      modal.classList.remove('show');
+      document.body.style.overflow='';
+      if (__modalKeyHandler) { document.removeEventListener('keydown', __modalKeyHandler); __modalKeyHandler = null; }
+      if (__lastFocused && typeof __lastFocused.focus === 'function') { __lastFocused.focus(); }
+    }
+
+    // Keyboard shortcuts
+    document.getElementById('age').addEventListener('keydown', (e) => { if (e.key === 'Enter') convert(); });
+    document.getElementById('yearInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') calculateYears(); });
+    document.getElementById('eraInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') calculateYears(); });
+
+    // Service Worker
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+  </script>
+</body>
+</html>
