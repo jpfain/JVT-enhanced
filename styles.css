@@ -226,7 +226,7 @@
   background: linear-gradient(120deg, transparent, rgba(255,255,255,0.7), transparent);
   transform: translateX(0) skewX(-20deg);
   opacity: 0;
-  animation: logo-sparkle 2.6s ease-in-out 0.8s infinite;
+  animation: logo-sparkle 1.3s ease-in-out 0.4s 2;
 }
 
 @keyframes logo-sparkle {
