@@ -41,8 +41,20 @@
     <h1>Jehovah’s View of Time</h1>
   </div>
 
+  <!-- Home Menu -->
+  <div class="card active" id="home-card">
+    <h2>Select a calculator</h2>
+    <p>Choose a tool below to explore time from Jehovah's perspective.</p>
+    <div class="mt-16">
+      <button class="nav-btn" id="home-age-btn">Age in Jehovah's view</button>
+    </div>
+    <div class="mt-8">
+      <button class="nav-btn" id="home-bce-btn">BCE/CE years calculator</button>
+    </div>
+  </div>
+
   <!-- Age Calculator -->
-  <div class="card active" id="age-card">
+  <div class="card hidden start-opacity-0" id="age-card">
     <h2>How old are you in Jehovah's eyes?</h2>
     <label for="age">Age</label>
     <input id="age" inputmode="decimal" pattern="[0-9,.]*" placeholder="Enter your age" step="0.01" min="0" aria-describedby="age-help age-error">

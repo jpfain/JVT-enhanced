@@ -8,7 +8,8 @@ window.addEventListener('load', () => {
     splash.style.opacity = '0';
     setTimeout(() => {
       splash.remove();
-      document.getElementById('age-card').classList.add('show');
+      const home = document.getElementById('home-card');
+      if (home) home.classList.add('show');
       document.getElementById('footer-watermark').classList.add('show');
     }, 1500);
   }, 2000);
@@ -53,18 +54,27 @@ function resetForm() {
   document.getElementById('reset-btn').style.display = 'none';
 }
 
+// Generic card switching
+function switchCards(fromId, toId) {
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+  if (!from || !to || from === to) return;
+  from.classList.remove('active');
+  to.classList.add('active');
+  from.style.opacity = '0';
+  setTimeout(() => {
+    from.classList.add('hidden');
+    to.classList.remove('hidden');
+    setTimeout(() => { to.style.opacity = '1'; }, 50);
+  }, 400);
+}
+
 // Card switching
 function openBCE() {
-  const a = document.getElementById('age-card'), b = document.getElementById('bce-card');
-  a.classList.remove('active'); b.classList.add('active');
-  a.style.opacity = '0';
-  setTimeout(() => { a.classList.add('hidden'); b.classList.remove('hidden'); setTimeout(()=>{b.style.opacity='1';},50); },400);
+  switchCards('age-card', 'bce-card');
 }
 function openAge() {
-  const a = document.getElementById('age-card'), b = document.getElementById('bce-card');
-  b.classList.remove('active'); a.classList.add('active');
-  b.style.opacity = '0';
-  setTimeout(() => { b.classList.add('hidden'); a.classList.remove('hidden'); setTimeout(()=>{a.style.opacity='1';},50); },400);
+  switchCards('bce-card', 'age-card');
 }
 
 // BCE/CE Calculator
@@ -158,6 +168,8 @@ window.addEventListener('DOMContentLoaded', () => {
   on(byId('reset-btn'), 'click', (e) => { e.preventDefault(); resetForm(); });
   on(byId('open-bce-btn'), 'click', (e) => { e.preventDefault(); openBCE(); });
   on(byId('back-age-btn'), 'click', (e) => { e.preventDefault(); openAge(); });
+  on(byId('home-age-btn'), 'click', (e) => { e.preventDefault(); switchCards('home-card', 'age-card'); });
+  on(byId('home-bce-btn'), 'click', (e) => { e.preventDefault(); switchCards('home-card', 'bce-card'); });
   on(byId('calcBtn'), 'click', (e) => { e.preventDefault(); calculateYears(); });
   on(byId('newDateBtn'), 'click', (e) => { e.preventDefault(); resetFormBCE(); });
   on(byId('more-info-link'), 'click', (e) => { e.preventDefault(); openModal(); });
