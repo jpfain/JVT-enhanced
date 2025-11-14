@@ -172,7 +172,7 @@ window.addEventListener('DOMContentLoaded', () => {
   on(byId('bce-home-btn'), 'click', (e) => { e.preventDefault(); switchCards('bce-card', 'home-card'); });
   on(byId('calcBtn'), 'click', (e) => { e.preventDefault(); calculateYears(); });
   on(byId('newDateBtn'), 'click', (e) => { e.preventDefault(); resetFormBCE(); });
-  on(byId('more-info-link'), 'click', (e) => { e.preventDefault(); openModal(); });
+  on(byId('home-info-btn'), 'click', (e) => { e.preventDefault(); openModal(); });
   on(byId('modal-close-btn'), 'click', (e) => { e.preventDefault(); closeModal(); });
 
   // Install button (Chrome/Edge only)
