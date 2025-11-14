@@ -62,11 +62,19 @@
     .nav-btn {
       background: #6da9ff;
       font-size: 15px;
-      padding: 10px 12px;
+      padding: 10px 16px;
       width: auto;
       min-width: 0;
     }
     .nav-btn:hover { background: #5b96eb; }
+
+    .nav-btn .btn-icon {
+      margin-right: 8px;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     #result {
       font-size: 1.25rem;
