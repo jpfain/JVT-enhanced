@@ -19,6 +19,8 @@ window.addEventListener('load', () => {
 function convert() {
   const ageInput = document.getElementById('age');
   const err = document.getElementById('age-error');
+  const calcBtn = document.getElementById('age-calc-btn');
+  const resetBtn = document.getElementById('reset-btn');
   const raw = ageInput.value.replace(/,/g, '');
   const age = parseFloat(raw);
   if (isNaN(age) || age < 0) {
@@ -45,13 +47,20 @@ function convert() {
   const r = document.getElementById('result');
   r.classList.remove('show'); r.textContent = output;
   setTimeout(() => r.classList.add('show'), 30);
-  document.getElementById('reset-btn').style.display = 'inline-block';
+  if (resetBtn) resetBtn.style.display = 'inline-block';
+  if (calcBtn) calcBtn.style.display = 'none';
 }
 function resetForm() {
-  document.getElementById('age').value = '';
-  document.getElementById('label').innerText = '';
-  document.getElementById('result').innerText = '';
-  document.getElementById('reset-btn').style.display = 'none';
+  const ageInput = document.getElementById('age');
+  const labelEl = document.getElementById('label');
+  const resultEl = document.getElementById('result');
+  const calcBtn = document.getElementById('age-calc-btn');
+  const resetBtn = document.getElementById('reset-btn');
+  if (ageInput) ageInput.value = '';
+  if (labelEl) labelEl.innerText = '';
+  if (resultEl) resultEl.innerText = '';
+  if (resetBtn) resetBtn.style.display = 'none';
+  if (calcBtn) calcBtn.style.display = 'inline-block';
 }
 
 // Generic card switching
