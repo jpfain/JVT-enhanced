@@ -1,6 +1,42 @@
 (function(){
 'use strict';
 
+function computeJehovahAge(age) {
+  if (isNaN(age) || age < 0) return null;
+  const totalHours = age / 41.656;
+  let D = Math.floor(totalHours / 24);
+  let H = Math.floor(totalHours % 24);
+  let M = Math.floor((totalHours * 60) % 60);
+  let S = Math.round((totalHours * 3600) % 60);
+  if (S === 60) { S = 0; M += 1; }
+  if (M === 60) { M = 0; H += 1; }
+  if (H === 24) { H = 0; D += 1; }
+  let output = '';
+  if (D > 0) output = `${D} day${D!==1?'s':''} ${H} hour${H!==1?'s':''}`;
+  else if (H > 0) output = `${H} hour${H!==1?'s':''} ${M} minute${M!==1?'s':''}`;
+  else output = `${M} minute${M!==1?'s':''} ${S} second${S!==1?'s':''}`;
+  return { D, H, M, S, output };
+}
+
+function computeBceCeDiff(year, era, currentYear) {
+  if (isNaN(year)) return null;
+  if (year < 1) return null;
+  const current = currentYear || new Date().getFullYear();
+  const numericYear = (era === "BCE") ? -year + 1 : year;
+  const diff = current - numericYear;
+  const absDiff = Math.abs(diff);
+  const daysJehovah = absDiff / 1000;
+  const roundedDays = Math.floor(daysJehovah);
+  const hrs = (daysJehovah * 24) % 24;
+  const mins = (hrs % 1) * 60;
+  const parts = [];
+  if (roundedDays > 0) parts.push(`${roundedDays} day${roundedDays!==1?'s':''}`);
+  if (Math.floor(hrs) > 0) parts.push(`${Math.floor(hrs)} hour${Math.floor(hrs)!==1?'s':''}`);
+  parts.push(`${Math.floor(mins)} minute${Math.floor(mins)!==1?'s':''}`);
+  const formatted = parts.length>1?parts.slice(0,-1).join(' ')+' and '+parts.slice(-1):parts[0];
+  return { current, numericYear, diff, absDiff, daysJehovah, formatted };
+}
+
 // Splash
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -23,7 +59,8 @@ function convert() {
   const resetBtn = document.getElementById('reset-btn');
   const raw = ageInput.value.replace(/,/g, '');
   const age = parseFloat(raw);
-  if (isNaN(age) || age < 0) {
+  const result = computeJehovahAge(age);
+  if (!result) {
     err.textContent = 'Please enter a valid non-negative number.';
     ageInput.setAttribute('aria-invalid', 'true');
     ageInput.focus();
@@ -31,21 +68,9 @@ function convert() {
   }
   err.textContent = '';
   ageInput.removeAttribute('aria-invalid');
-  const totalHours = age / 41.656;
-  let D = Math.floor(totalHours / 24);
-  let H = Math.floor(totalHours % 24);
-  let M = Math.floor((totalHours * 60) % 60);
-  let S = Math.round((totalHours * 3600) % 60);
-  if (S === 60) { S = 0; M += 1; }
-  if (M === 60) { M = 0; H += 1; }
-  if (H === 24) { H = 0; D += 1; }
-  let output = '';
-  if (D > 0) output = `${D} day${D!==1?'s':''} ${H} hour${H!==1?'s':''}`;
-  else if (H > 0) output = `${H} hour${H!==1?'s':''} ${M} minute${M!==1?'s':''}`;
-  else output = `${M} minute${M!==1?'s':''} ${S} second${S!==1?'s':''}`;
   document.getElementById('label').innerText = "Your age in Jehovah’s eyes:";
   const r = document.getElementById('result');
-  r.classList.remove('show'); r.textContent = output;
+  r.classList.remove('show'); r.textContent = result.output;
   setTimeout(() => r.classList.add('show'), 30);
   if (resetBtn) resetBtn.style.display = 'inline-block';
   if (calcBtn) calcBtn.style.display = 'none';
@@ -95,24 +120,17 @@ function calculateYears() {
   const year = parseInt(yv,10);
   if (isNaN(year)) { resultEl.textContent="Please enter a valid year."; ratioEl.textContent=""; return; }
   if (year < 1) { resultEl.textContent = `Please enter a year of 1 or greater for ${era}.`; ratioEl.textContent = ""; return; }
-  const current = new Date().getFullYear();
-  const numericYear = (era === "BCE") ? -year + 1 : year;
-  const diff = current - numericYear;
-  const absDiff = Math.abs(diff);
+  const data = computeBceCeDiff(year, era);
+  const current = data.current;
+  const numericYear = data.numericYear;
+  const diff = data.diff;
+  const absDiff = data.absDiff;
   if (diff >= 0) {
     resultEl.innerHTML = `The year <strong>${year} ${era}</strong> was <strong>${diff.toLocaleString()}</strong> years ago (as of ${current} CE).`;
   } else {
     resultEl.innerHTML = `The year <strong>${year} ${era}</strong> is in <strong>${absDiff.toLocaleString()}</strong> years (as of ${current} CE).`;
   }
-  const daysJehovah = absDiff / 1000;
-  const roundedDays = Math.floor(daysJehovah);
-  const hrs = (daysJehovah * 24) % 24;
-  const mins = (hrs % 1) * 60;
-  const parts = [];
-  if (roundedDays > 0) parts.push(`${roundedDays} day${roundedDays!==1?'s':''}`);
-  if (Math.floor(hrs) > 0) parts.push(`${Math.floor(hrs)} hour${Math.floor(hrs)!==1?'s':''}`);
-  parts.push(`${Math.floor(mins)} minute${Math.floor(mins)!==1?'s':''}`);
-  const formatted = parts.length>1?parts.slice(0,-1).join(' ')+' and '+parts.slice(-1):parts[0];
+  const formatted = data.formatted;
   ratioEl.innerHTML = diff >= 0
     ? `In Jehovah’s view, that’s <strong>${formatted}</strong>.`
     : `In Jehovah’s view, that’s in <strong>${formatted}</strong>.`;
@@ -205,5 +223,10 @@ window.addEventListener('DOMContentLoaded', () => {
     deferredPrompt = null;
   });
 });
+
+window.JVTTest = {
+  computeJehovahAge,
+  computeBceCeDiff
+};
 
 })();
