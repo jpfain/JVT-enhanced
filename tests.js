@@ -20,7 +20,8 @@
   }
 
   // Age calculator tests
-  assertEqual('Age 41.656 years', window.JVTTest.computeJehovahAge(41.656).output, '1 day 0 hours');
+  // 41.656 human years = 1 "Jehovah hour" in your formula, so expect 1 hour 0 minutes.
+  assertEqual('Age 41.656 years', window.JVTTest.computeJehovahAge(41.656).output, '1 hour 0 minutes');
   assertEqual('Age 0 years', window.JVTTest.computeJehovahAge(0).output, '0 minutes 0 seconds');
 
   // BCE/CE calculator tests (structure only, years ago / in years)
