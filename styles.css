@@ -146,9 +146,17 @@
       overflow-y: auto;
     }
     #infoModal.show .modal-card { transform: scale(1); }
+    #infoModal .modal-card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.35rem;
+      color: #111827;
+      text-align: center;
+    }
+
     #infoModal .modal-card h4 {
       margin-top: 16px;
-      margin-bottom: 2px;
+      margin-bottom: 0;
       font-size: 1.12rem;
       color: #1f2933;
     }
