@@ -117,6 +117,14 @@
     .input-row input { flex: 1 1 60%; max-width: 220px; }
     .input-row select { font-size: 1.1rem; padding: 8px 10px; }
 
+.result-label {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+}
+
     /* Modal */
     #infoModal {
       position: fixed;
