@@ -142,6 +142,8 @@
       transform: scale(0.9);
       transition: transform 0.25s ease;
       position: relative;
+      max-height: 80vh;
+      overflow-y: auto;
     }
     #infoModal.show .modal-card { transform: scale(1); }
     /* Position Close button neatly in top-right of modal */
