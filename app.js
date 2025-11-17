@@ -147,8 +147,13 @@ function calculateYears() {
   calcBtn.style.display='none'; newDateBtn.style.display='inline-block';
 }
 function resetFormBCE() {
-  document.getElementById('yearInput').value=''; document.getElementById('resultBCE').textContent=''; document.getElementById('ratio').textContent='';
-  document.getElementById('calcBtn').style.display='inline-block'; document.getElementById('newDateBtn').style.display='none';
+  document.getElementById('yearInput').value='';
+  document.getElementById('resultBCE').textContent='';
+  document.getElementById('ratio').textContent='';
+  const preset = document.getElementById('presetYears');
+  if (preset) preset.selectedIndex = 0;
+  document.getElementById('calcBtn').style.display='inline-block';
+  document.getElementById('newDateBtn').style.display='none';
 }
 
 // Modal
