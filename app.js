@@ -93,6 +93,13 @@ function switchCards(fromId, toId) {
   const from = document.getElementById(fromId);
   const to = document.getElementById(toId);
   if (!from || !to || from === to) return;
+  // Reset calculators when leaving their cards so they reopen in a fresh state
+  if (fromId === 'age-card') {
+    try { resetForm(); } catch {}
+  }
+  if (fromId === 'bce-card') {
+    try { resetFormBCE(); } catch {}
+  }
   from.classList.remove('active');
   to.classList.add('active');
   from.style.opacity = '0';
