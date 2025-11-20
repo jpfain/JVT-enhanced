@@ -253,9 +253,12 @@ function openModal() {
   modal.classList.add('show');
   document.body.style.overflow='hidden';
   const focusables = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  const closeBtn = modal.querySelector('#modal-close-btn');
   const first = focusables[0];
   const last = focusables[focusables.length - 1];
-  if (first) first.focus();
+  // Prefer focusing the Close button so links do not show a focus ring first
+  if (closeBtn) closeBtn.focus();
+  else if (first) first.focus();
   __modalKeyHandler = (e) => {
     if (e.key === 'Escape') { closeModal(); }
     if (e.key === 'Tab') {
