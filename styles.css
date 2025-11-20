@@ -175,10 +175,11 @@
 }
 
 /* Modal */
-#infoModal {
+#infoModal,
+#articleModal1 {
   position: fixed;
   inset: 0;
-  display: none; /* hidden by default so it doesn't share space with cards */
+  display: none;
   align-items: center;
   justify-content: center;
   background: rgba(0,0,0,0.35);
@@ -189,14 +190,16 @@
   z-index: 99999;
   pointer-events: none;
 }
-#infoModal.show {
-  display: flex; /* only participate in layout when shown */
+#infoModal.show,
+#articleModal1.show {
+  display: flex;
   opacity: 1;
   visibility: visible;
   transition-delay: 0s;
   pointer-events: auto;
 }
-#infoModal .modal-card {
+#infoModal .modal-card,
+#articleModal1 .modal-card {
   width: 100%;
   max-width: 540px;
   background: #fff;
@@ -209,15 +212,18 @@
   max-height: 80vh;
   overflow-y: auto;
 }
-#infoModal.show .modal-card { transform: scale(1); }
-#infoModal .modal-card h3 {
+#infoModal.show .modal-card,
+#articleModal1.show .modal-card { transform: scale(1); }
+#infoModal .modal-card h3,
+#articleModal1 .modal-card h3 {
   margin-top: 0;
   margin-bottom: 10px;
   font-size: 1.35rem;
   color: #111827;
   text-align: left;
 }
-#infoModal .modal-card h4 {
+#infoModal .modal-card h4,
+#articleModal1 .modal-card h4 {
   margin-top: 16px;
   margin-bottom: 0;
   font-size: 1.12rem;
@@ -225,14 +231,24 @@
 }
 
 /* Position Close button neatly in top-right of modal */
-#infoModal .modal-card {
+#infoModal .modal-card,
+#articleModal1 .modal-card {
   position: relative;
 }
-    #infoModal .modal-card {
+#infoModal .modal-card button,
+#articleModal1 .modal-card button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+    #articleModal1 .modal-card {
       position: relative;
     }
 
-    #infoModal .modal-card button {
+    #infoModal .modal-card button,
+    #articleModal1 .modal-card button {
       position: absolute;
       top: 14px;
       right: 14px;
