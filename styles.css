@@ -235,6 +235,7 @@
 #articleModal1 .modal-card {
   position: relative;
 }
+
 #infoModal .modal-card button,
 #articleModal1 .modal-card button {
   position: absolute;
@@ -243,27 +244,16 @@
   padding: 6px 12px;
   font-size: 0.9rem;
   border-radius: 8px;
-    #articleModal1 .modal-card {
-      position: relative;
-    }
+  background: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
 
-    #infoModal .modal-card button,
-    #articleModal1 .modal-card button {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      padding: 6px 12px;
-      font-size: 0.9rem;
-      border-radius: 8px;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-
-    #infoModal .modal-card button:hover {
-      background: #005fcc;
-    }
+#infoModal .modal-card button:hover,
+#articleModal1 .modal-card button:hover {
+  background: #005fcc;
+}
 
 
     @media (prefers-color-scheme: dark) {
@@ -402,4 +392,3 @@
 }
 button:focus-visible { border-radius: 999px; }
 select:focus-visible { border-radius: 10px; }
-
