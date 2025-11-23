@@ -252,6 +252,9 @@ function openModal() {
   __lastFocused = document.activeElement;
   modal.classList.add('show');
   document.body.style.overflow='hidden';
+  // Ensure the modal content starts scrolled to the top each time
+  const modalCard = modal.querySelector('.modal-card');
+  if (modalCard) modalCard.scrollTop = 0;
   const focusables = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
   const closeBtn = modal.querySelector('#modal-close-btn');
   const first = focusables[0];
