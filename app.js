@@ -155,9 +155,17 @@ function switchCards(fromId, toId) {
     to.classList.remove('hidden');
     setTimeout(() => {
       to.style.opacity = '1';
-      // Move focus to the new card's heading for accessibility
-      const heading = to.querySelector('h2[tabindex="-1"]');
-      if (heading && typeof heading.focus === 'function') heading.focus();
+      // Move focus appropriately when switching cards
+      if (toId === 'age-card') {
+        const ageInput = document.getElementById('age');
+        if (ageInput && typeof ageInput.focus === 'function') {
+          ageInput.focus();
+        }
+      } else {
+        // Default: focus the new card's heading for accessibility
+        const heading = to.querySelector('h2[tabindex="-1"]');
+        if (heading && typeof heading.focus === 'function') heading.focus();
+      }
     }, 50);
   }, 400);
 }
