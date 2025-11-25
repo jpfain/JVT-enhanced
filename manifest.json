@@ -1,6 +1,7 @@
 {
   "name": "Jehovah’s View of Time",
   "short_name": "JVT",
+  "version": "1.0.0",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
