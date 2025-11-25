@@ -102,7 +102,7 @@
 
     .footer-watermark {
       position: fixed;
-      bottom: 10px;
+      bottom: 22px;
       left: 50%;
       transform: translateX(-50%);
       opacity: 0;
