@@ -459,6 +459,36 @@
   background: linear-gradient(90deg, #a5b4fc, #6366f1);
 }
 
+.zoom-row {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.zoom-label {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.zoom-bar {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #e5e7eb, #e5e7eb);
+}
+
+.zoom-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #a5b4fc, #6366f1);
+  opacity: 0.9;
+}
+
 .time-caption {
   margin-top: 10px;
   font-size: 0.78rem;
