@@ -104,7 +104,7 @@ function convert() {
   labelEl.innerText = "Your age in Jehovah's eyes:";
   r.textContent = result.output;
 
-  updateTimeCompression(age);
+  updateTimeCompression(age, result.output);
 
   // Start from a faded, slightly lowered state
   labelEl.style.opacity = '0';
@@ -149,54 +149,35 @@ function resetForm() {
   if (timeCaption) timeCaption.textContent = '';
 }
 
-function updateTimeCompression(age) {
+function updateTimeCompression(age, jehovahOutput) {
   const timeCompression = document.getElementById('time-compression');
   const timeCaption = document.getElementById('time-caption');
+  const humanLabel = document.getElementById('human-time-label');
+  const jehovahLabel = document.getElementById('jehovah-time-label');
+  const jehovahFill = document.getElementById('jehovah-bar-fill');
 
-  if (!timeCompression || !timeCaption) return;
+  if (!timeCompression || !timeCaption || !humanLabel || !jehovahLabel || !jehovahFill) return;
 
   timeCompression.style.display = 'block';
 
-  let perceptionRatio;
-  let timeDescription;
+  const humanYears = Number.isFinite(age)
+    ? (age % 1 === 0 ? age.toString() : age.toFixed(1))
+    : '';
 
-  if (age <= 10) {
-    perceptionRatio = 1;
-    timeDescription = "At this young age, time feels expansive. One year is a significant portion of your life experience.";
-  } else if (age <= 20) {
-    perceptionRatio = 0.5;
-    timeDescription = "As you grow, each year becomes a smaller fraction of your total life experience.";
-  } else if (age <= 40) {
-    perceptionRatio = 0.25;
-    timeDescription = "Time seems to move faster now. Each year feels shorter compared to your childhood years.";
-  } else if (age <= 60) {
-    perceptionRatio = 0.125;
-    timeDescription = "The years seem to pass more quickly now, as each one becomes a smaller part of your life's journey.";
-  } else {
-    perceptionRatio = 0.0625;
-    timeDescription = "From Jehovah's eternal perspective, even a long human life is but a brief moment.";
-  }
+  humanLabel.textContent = humanYears
+    ? `${humanYears} human year${age === 1 ? '' : 's'}`
+    : '';
 
-  timeCaption.textContent = timeDescription;
+  jehovahLabel.textContent = jehovahOutput
+    ? `${jehovahOutput} within one Jehovah day`
+    : '';
 
-  const segments = document.querySelectorAll('.time-segment');
-  segments.forEach(segment => {
-    segment.style.flex = '0 0 0';
-    segment.style.transition = 'flex 1s ease-out';
-  });
+  // 1,000 human years = 1 Jehovah day (24 hours)
+  const ratio = Math.max(0, Math.min(age / 1000, 1));
+  const percent = Math.max(ratio * 100, ratio > 0 ? 4 : 0);
+  jehovahFill.style.width = percent + '%';
 
-  setTimeout(() => {
-    const child = document.querySelector('.time-segment-child');
-    const teen = document.querySelector('.time-segment-teen');
-    const adult = document.querySelector('.time-segment-adult');
-    const senior = document.querySelector('.time-segment-senior');
-    if (!child || !teen || !adult || !senior) return;
-
-    child.style.flex = perceptionRatio * 4;
-    teen.style.flex = perceptionRatio * 3;
-    adult.style.flex = perceptionRatio * 2;
-    senior.style.flex = perceptionRatio * 1;
-  }, 50);
+  timeCaption.textContent = '1,000 human years are like 1 day to Jehovah. Your entire life so far is only a small moment in that day.';
 }
 
 // Generic card switching

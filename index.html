@@ -81,18 +81,23 @@
       <div id="result" aria-live="polite"></div>
 
       <div id="time-compression" class="time-compression" aria-hidden="true">
-        <div class="time-scale">
-          <div class="time-marker time-marker-child">Age 5</div>
-          <div class="time-marker time-marker-teen">Age 15</div>
-          <div class="time-marker time-marker-adult">Age 30</div>
-          <div class="time-marker time-marker-senior">Age 60</div>
-          <div class="time-marker time-marker-legend">Jehovah's View</div>
+        <div class="dual-time-rows">
+          <div class="dual-row">
+            <div class="dual-label">Human time</div>
+            <div class="dual-value" id="human-time-label"></div>
+          </div>
+          <div class="dual-row">
+            <div class="dual-label">In Jehovah's eyes</div>
+            <div class="dual-value" id="jehovah-time-label"></div>
+          </div>
         </div>
-        <div class="time-visualization">
-          <div class="time-segment time-segment-child"></div>
-          <div class="time-segment time-segment-teen"></div>
-          <div class="time-segment time-segment-adult"></div>
-          <div class="time-segment time-segment-senior"></div>
+        <div class="dual-bars">
+          <div class="dual-bar dual-bar-human">
+            <div class="dual-bar-fill dual-bar-fill-human"></div>
+          </div>
+          <div class="dual-bar dual-bar-jehovah">
+            <div class="dual-bar-fill dual-bar-fill-jehovah" id="jehovah-bar-fill"></div>
+          </div>
         </div>
         <div class="time-caption" id="time-caption"></div>
       </div>
