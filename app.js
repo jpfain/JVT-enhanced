@@ -104,8 +104,6 @@ function convert() {
   labelEl.innerText = "Your age in Jehovah's eyes:";
   r.textContent = result.output;
 
-  updateTimeCompression(age, result.output);
-
   // Start from a faded, slightly lowered state
   labelEl.style.opacity = '0';
   labelEl.style.transform = 'translateY(8px)';
@@ -135,49 +133,6 @@ function resetForm() {
   if (resultEl) resultEl.innerText = '';
   if (resetBtn) resetBtn.style.display = 'none';
   if (calcBtn) calcBtn.style.display = 'inline-block';
-
-  const timeCompression = document.getElementById('time-compression');
-  if (timeCompression) {
-    timeCompression.style.display = 'none';
-    const segments = document.querySelectorAll('.time-segment');
-    segments.forEach(segment => {
-      segment.style.flex = '0';
-    });
-  }
-
-  const timeCaption = document.getElementById('time-caption');
-  if (timeCaption) timeCaption.textContent = '';
-}
-
-function updateTimeCompression(age, jehovahOutput) {
-  const timeCompression = document.getElementById('time-compression');
-  const timeCaption = document.getElementById('time-caption');
-  const humanLabel = document.getElementById('human-time-label');
-  const jehovahLabel = document.getElementById('jehovah-time-label');
-  const jehovahFill = document.getElementById('jehovah-bar-fill');
-
-  if (!timeCompression || !timeCaption || !humanLabel || !jehovahLabel || !jehovahFill) return;
-
-  timeCompression.style.display = 'block';
-
-  const humanYears = Number.isFinite(age)
-    ? (age % 1 === 0 ? age.toString() : age.toFixed(1))
-    : '';
-
-  humanLabel.textContent = humanYears
-    ? `${humanYears} human year${age === 1 ? '' : 's'}`
-    : '';
-
-  jehovahLabel.textContent = jehovahOutput
-    ? `${jehovahOutput} within one Jehovah day`
-    : '';
-
-  // 1,000 human years = 1 Jehovah day (24 hours)
-  const ratio = Math.max(0, Math.min(age / 1000, 1));
-  const percent = Math.max(ratio * 100, ratio > 0 ? 4 : 0);
-  jehovahFill.style.width = percent + '%';
-
-  timeCaption.textContent = '1,000 human years are like 1 day to Jehovah. Your entire life so far is only a small moment in that day.';
 }
 
 // Generic card switching
