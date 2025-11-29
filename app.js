@@ -1,6 +1,8 @@
 (function(){
 'use strict';
 
+let __lastJehovahResult = null;
+
 function computeJehovahAge(age) {
   if (isNaN(age) || age < 0) return null;
   const totalHours = age / 41.656;
@@ -104,6 +106,8 @@ function convert() {
   labelEl.innerText = "Your age in Jehovah's eyes:";
   r.textContent = result.output;
 
+  __lastJehovahResult = result;
+
   // Update digital stopwatch to show Jehovah-time result
   try {
     updateAgeStopwatch(result);
@@ -144,6 +148,8 @@ function resetForm() {
     display.textContent = '00:00';
     display.classList.remove('stopwatch-active');
   }
+
+  __lastJehovahResult = null;
 }
 
 function updateAgeStopwatch(result) {
@@ -158,10 +164,18 @@ function updateAgeStopwatch(result) {
   let start = null;
   const duration = 2200; // ms for the count-up animation (slightly slower)
 
+  const showHours = targetSeconds >= 3600;
+
   const format = (totalSeconds) => {
+    const pad = (n) => n.toString().padStart(2, '0');
+    if (showHours) {
+      const h = Math.floor(totalSeconds / 3600);
+      const m = Math.floor((totalSeconds % 3600) / 60);
+      const s = totalSeconds % 60;
+      return `${pad(h)}:${pad(m)}:${pad(s)}`;
+    }
     const m = Math.floor(totalSeconds / 60);
     const s = totalSeconds % 60;
-    const pad = (n) => n.toString().padStart(2, '0');
     return `${pad(m)}:${pad(s)}`;
   };
 
@@ -478,6 +492,10 @@ window.addEventListener('DOMContentLoaded', () => {
   on(byId('age-home-btn'), 'click', (e) => { e.preventDefault(); switchCards('age-card', 'home-card'); });
   on(byId('bce-home-btn'), 'click', (e) => { e.preventDefault(); switchCards('bce-card', 'home-card'); });
   on(byId('about-home-btn'), 'click', (e) => { e.preventDefault(); switchCards('about-card', 'home-card'); });
+  on(byId('stopwatch-start-btn'), 'click', (e) => {
+    e.preventDefault();
+    if (__lastJehovahResult) updateAgeStopwatch(__lastJehovahResult);
+  });
   on(byId('calcBtn'), 'click', (e) => { e.preventDefault(); calculateYears(); });
   on(byId('newDateBtn'), 'click', (e) => { e.preventDefault(); resetFormBCE(); });
   on(byId('home-info-btn'), 'click', (e) => { e.preventDefault(); openModal(); });
