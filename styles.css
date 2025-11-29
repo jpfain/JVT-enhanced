@@ -377,95 +377,31 @@
   transition: opacity .4s, transform .4s;
 }
 
-/* Analog clock for Age result */
+/* Digital stopwatch for Age result */
 
-.age-clock {
-  margin-top: 16px;
+.age-stopwatch {
+  margin-top: 14px;
   display: flex;
   justify-content: center;
 }
 
-.clock-face {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #ffffff, #e5e7eb);
-  box-shadow:
-    0 4px 10px rgba(15, 23, 42, 0.15),
-    inset 0 0 0 2px rgba(148, 163, 184, 0.5);
-}
-
-.clock-center {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.stopwatch-display {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1.35rem;
+  letter-spacing: 0.18em;
   background: #111827;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 4;
+  color: #e5e7eb;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+  opacity: 0.6;
+  transition: opacity 0.4s ease, box-shadow 0.4s ease;
 }
 
-.clock-hand {
-  position: absolute;
-  width: 50%;
-  height: 2px;
-  background: #111827;
-  top: 50%;
-  left: 50%;
-  transform-origin: 0% 50%;
-  transform: rotate(-90deg);
-  transition: transform 3s ease-out;
-  z-index: 3;
+.stopwatch-display.stopwatch-active {
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
 }
-
-.clock-hand-hour {
-  width: 32%;
-  height: 3px;
-  background: #111827;
-}
-
-.clock-hand-minute {
-  width: 44%;
-  height: 2px;
-  background: #1d4ed8;
-}
-
-.clock-hand-second {
-  width: 46%;
-  height: 1.5px;
-  background: #ef4444;
-}
-
-.clock-ticks {
-  position: absolute;
-  inset: 8px;
-}
-
-.clock-ticks span {
-  position: absolute;
-  width: 2px;
-  height: 8px;
-  background: #9ca3af;
-  top: 0;
-  left: 50%;
-  transform-origin: 50% 60px;
-}
-
-.clock-ticks span:nth-child(1) { transform: rotate(0deg) translateX(-50%); }
-.clock-ticks span:nth-child(2) { transform: rotate(30deg) translateX(-50%); }
-.clock-ticks span:nth-child(3) { transform: rotate(60deg) translateX(-50%); }
-.clock-ticks span:nth-child(4) { transform: rotate(90deg) translateX(-50%); }
-.clock-ticks span:nth-child(5) { transform: rotate(120deg) translateX(-50%); }
-.clock-ticks span:nth-child(6) { transform: rotate(150deg) translateX(-50%); }
-.clock-ticks span:nth-child(7) { transform: rotate(180deg) translateX(-50%); }
-.clock-ticks span:nth-child(8) { transform: rotate(210deg) translateX(-50%); }
-.clock-ticks span:nth-child(9) { transform: rotate(240deg) translateX(-50%); }
-.clock-ticks span:nth-child(10) { transform: rotate(270deg) translateX(-50%); }
-.clock-ticks span:nth-child(11) { transform: rotate(300deg) translateX(-50%); }
-.clock-ticks span:nth-child(12) { transform: rotate(330deg) translateX(-50%); }
 
 
 #output-area {

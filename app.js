@@ -104,9 +104,9 @@ function convert() {
   labelEl.innerText = "Your age in Jehovah's eyes:";
   r.textContent = result.output;
 
-  // Update analog clock to show Jehovah-time result
+  // Update digital stopwatch to show Jehovah-time result
   try {
-    updateAgeClock(result);
+    updateAgeStopwatch(result);
   } catch {}
 
   // Start from a faded, slightly lowered state
@@ -139,57 +139,47 @@ function resetForm() {
   if (resetBtn) resetBtn.style.display = 'none';
   if (calcBtn) calcBtn.style.display = 'inline-block';
 
-  // Reset analog clock back to 12:00
-  try {
-    const h = document.getElementById('clock-hour');
-    const m = document.getElementById('clock-minute');
-    const s = document.getElementById('clock-second');
-    [h, m, s].forEach(hand => {
-      if (hand) {
-        hand.style.transition = 'none';
-        hand.style.transform = 'rotate(-90deg)';
-      }
-    });
-    // Force reflow, then restore transition for next animation
-    void (h && h.offsetWidth);
-    [h, m, s].forEach(hand => {
-      if (hand) hand.style.transition = 'transform 3s ease-out';
-    });
-  } catch {}
+  const display = document.getElementById('stopwatch-display');
+  if (display) {
+    display.textContent = '00:00';
+    display.classList.remove('stopwatch-active');
+  }
 }
 
-function updateAgeClock(result) {
-  const hourHand = document.getElementById('clock-hour');
-  const minuteHand = document.getElementById('clock-minute');
-  const secondHand = document.getElementById('clock-second');
-  if (!hourHand || !minuteHand || !secondHand || !result) return;
+function updateAgeStopwatch(result) {
+  const display = document.getElementById('stopwatch-display');
+  if (!display || !result) return;
 
   const H = result.H || 0;
   const M = result.M || 0;
   const S = result.S || 0;
+  const targetSeconds = H * 3600 + M * 60 + S;
 
-  // Compute target angles
-  const hourAngle = ((H % 12) + M / 60) * 30 - 90; // 360 / 12, offset so 0 is at 12 o'clock
-  const minuteAngle = (M + S / 60) * 6 - 90;        // 360 / 60, offset
-  const secondAngle = S * 6 - 90;                   // 360 / 60, offset
+  let start = null;
+  const duration = 2200; // ms for the count-up animation (slightly slower)
 
-  // Start from 12:00 for a smooth single sweep
-  [hourHand, minuteHand, secondHand].forEach(hand => {
-    hand.style.transition = 'none';
-    hand.style.transform = 'rotate(-90deg)';
-  });
+  const format = (totalSeconds) => {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    const pad = (n) => n.toString().padStart(2, '0');
+    return `${pad(m)}:${pad(s)}`;
+  };
 
-  // Force reflow so the browser applies the initial state
-  void hourHand.offsetWidth;
+  function step(timestamp) {
+    if (start === null) start = timestamp;
+    const elapsed = timestamp - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const current = Math.round(targetSeconds * progress);
+    display.textContent = format(current);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  }
 
-  [hourHand, minuteHand, secondHand].forEach(hand => {
-    hand.style.transition = 'transform 3s ease-out';
-  });
-
-  // Apply target angles
-  hourHand.style.transform = `rotate(${hourAngle}deg)`;
-  minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
-  secondHand.style.transform = `rotate(${secondAngle}deg)`;
+  // Start from 00:00 each time
+  display.textContent = '00:00';
+  display.classList.add('stopwatch-active');
+  window.requestAnimationFrame(step);
 }
 
 // Generic card switching
