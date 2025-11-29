@@ -104,6 +104,11 @@ function convert() {
   labelEl.innerText = "Your age in Jehovah's eyes:";
   r.textContent = result.output;
 
+  // Update analog clock to show Jehovah-time result
+  try {
+    updateAgeClock(result);
+  } catch {}
+
   // Start from a faded, slightly lowered state
   labelEl.style.opacity = '0';
   labelEl.style.transform = 'translateY(8px)';
@@ -133,6 +138,58 @@ function resetForm() {
   if (resultEl) resultEl.innerText = '';
   if (resetBtn) resetBtn.style.display = 'none';
   if (calcBtn) calcBtn.style.display = 'inline-block';
+
+  // Reset analog clock back to 12:00
+  try {
+    const h = document.getElementById('clock-hour');
+    const m = document.getElementById('clock-minute');
+    const s = document.getElementById('clock-second');
+    [h, m, s].forEach(hand => {
+      if (hand) {
+        hand.style.transition = 'none';
+        hand.style.transform = 'rotate(0deg)';
+      }
+    });
+    // Force reflow, then restore transition for next animation
+    void (h && h.offsetWidth);
+    [h, m, s].forEach(hand => {
+      if (hand) hand.style.transition = 'transform 3s ease-out';
+    });
+  } catch {}
+}
+
+function updateAgeClock(result) {
+  const hourHand = document.getElementById('clock-hour');
+  const minuteHand = document.getElementById('clock-minute');
+  const secondHand = document.getElementById('clock-second');
+  if (!hourHand || !minuteHand || !secondHand || !result) return;
+
+  const H = result.H || 0;
+  const M = result.M || 0;
+  const S = result.S || 0;
+
+  // Compute target angles
+  const hourAngle = ((H % 12) + M / 60) * 30; // 360 / 12
+  const minuteAngle = (M + S / 60) * 6;        // 360 / 60
+  const secondAngle = S * 6;                   // 360 / 60
+
+  // Start from 12:00 for a smooth single sweep
+  [hourHand, minuteHand, secondHand].forEach(hand => {
+    hand.style.transition = 'none';
+    hand.style.transform = 'rotate(0deg)';
+  });
+
+  // Force reflow so the browser applies the initial state
+  void hourHand.offsetWidth;
+
+  [hourHand, minuteHand, secondHand].forEach(hand => {
+    hand.style.transition = 'transform 3s ease-out';
+  });
+
+  // Apply target angles
+  hourHand.style.transform = `rotate(${hourAngle}deg)`;
+  minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+  secondHand.style.transform = `rotate(${secondAngle}deg)`;
 }
 
 // Generic card switching
