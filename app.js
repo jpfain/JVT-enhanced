@@ -116,15 +116,16 @@ function convert() {
   void r.offsetWidth;
   r.classList.add('age-result-flare');
 
-  // Staggered: label first, then numeric result (match BCE/CE card style)
+  // Staggered: label first, then numeric result
+  // Label appears after 1 second, result 0.5 seconds later
   setTimeout(() => {
     labelEl.style.opacity = '1';
     labelEl.style.transform = 'translateY(0)';
-  }, 50);
+  }, 1000);
   setTimeout(() => {
     r.style.opacity = '1';
     r.style.transform = 'translateY(0)';
-  }, 250);
+  }, 1500);
   if (resetBtn) resetBtn.style.display = 'inline-block';
   if (calcBtn) calcBtn.style.display = 'none';
 }
