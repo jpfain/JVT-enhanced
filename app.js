@@ -336,6 +336,10 @@ function openArticleModal1() {
   if (!modal) return;
   __lastFocused = document.activeElement;
   modal.classList.add('show');
+  
+  // Load article content if not already loaded
+  loadArticleContent();
+  
   const focusables = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
   const closeBtn = modal.querySelector('#article-close-btn-1');
   const first = focusables[0];
@@ -357,6 +361,9 @@ function openArticleModal1() {
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.pointerEvents = 'none';
   modal.style.pointerEvents = 'auto';
+  
+  // Haptic feedback for modal open
+  triggerHaptic('medium');
 }
 
 function closeArticleModal1() {
@@ -402,6 +409,45 @@ function closeArticleModal1() {
   if (__lastFocused && typeof __lastFocused.focus === 'function') { __lastFocused.focus(); }
 }
 
+// Utility: Haptic feedback for mobile devices
+function triggerHaptic(type = 'light') {
+  if ('vibrate' in navigator) {
+    switch(type) {
+      case 'light':
+        navigator.vibrate(10);
+        break;
+      case 'medium':
+        navigator.vibrate(15);
+        break;
+      case 'strong':
+        navigator.vibrate([20, 10, 20]);
+        break;
+    }
+  }
+}
+
+// Utility: Lazy load article content
+function loadArticleContent() {
+  const articleModal = document.getElementById('articleModal1');
+  if (!articleModal) return;
+  
+  // Check if content is already loaded
+  if (articleModal.dataset.loaded === 'true') return;
+  
+  // Mark as loaded
+  articleModal.dataset.loaded = 'true';
+  
+  // Content is already in HTML, but we could load it via AJAX here
+  // For now, we'll just trigger a subtle animation when first opened
+  const modalCard = articleModal.querySelector('.modal-card');
+  if (modalCard) {
+    modalCard.style.opacity = '0.95';
+    setTimeout(() => {
+      modalCard.style.opacity = '1';
+    }, 50);
+  }
+}
+
 // Keyboard shortcuts and input sanitation
 try {
   document.getElementById('age').addEventListener('keydown', (e) => { if (e.key === 'Enter') convert(); });
@@ -438,7 +484,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   } catch {}
 
-  on(byId('age-calc-btn'), 'click', (e) => { e.preventDefault(); convert(); });
+  on(byId('age-calc-btn'), 'click', (e) => { 
+    e.preventDefault(); 
+    triggerHaptic('light'); // Haptic feedback for calculation button
+    convert(); 
+  });
   // Clear age errors as the user types
   const ageInput = byId('age');
   if (ageInput) {
@@ -456,9 +506,17 @@ window.addEventListener('DOMContentLoaded', () => {
   on(byId('age-home-btn'), 'click', (e) => { e.preventDefault(); switchCards('age-card', 'home-card'); });
   on(byId('bce-home-btn'), 'click', (e) => { e.preventDefault(); switchCards('bce-card', 'home-card'); });
   on(byId('about-home-btn'), 'click', (e) => { e.preventDefault(); switchCards('about-card', 'home-card'); });
-  on(byId('calcBtn'), 'click', (e) => { e.preventDefault(); calculateYears(); });
+  on(byId('calcBtn'), 'click', (e) => { 
+    e.preventDefault(); 
+    triggerHaptic('light'); // Haptic feedback for BCE calculation button
+    calculateYears(); 
+  });
   on(byId('newDateBtn'), 'click', (e) => { e.preventDefault(); resetFormBCE(); });
-  on(byId('home-info-btn'), 'click', (e) => { e.preventDefault(); openModal(); });
+  on(byId('home-info-btn'), 'click', (e) => { 
+    e.preventDefault(); 
+    triggerHaptic('medium'); // Haptic feedback for modal open
+    openModal(); 
+  });
   on(byId('modal-close-btn'), 'click', (e) => { e.preventDefault(); closeModal(); });
 
   // Article summary modal (from link in Time Explained)
