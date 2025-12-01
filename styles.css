@@ -425,10 +425,11 @@
 }
 
 .result-note {
-  font-size: 0.65rem;
-  color: #9ca3af;
+  font-size: 0.85rem;
+  color: rgba(15, 23, 42, 0.70);
   margin-top: 8px;
   line-height: 1.4;
+  font-style: italic;
 }
 
 /* Focus-visible polish */
