@@ -291,11 +291,21 @@ function unlockScroll() {
 function openModal() {
   const modal = document.getElementById('infoModal');
   __lastFocused = document.activeElement;
+  
+  // Add lazy loading behavior like switchCards
+  modal.style.opacity = '0';
   modal.classList.add('show');
   lockScroll();
+  
   // Ensure the modal content starts scrolled to the top each time
   const modalCard = modal.querySelector('.modal-card');
   if (modalCard) modalCard.scrollTop = 0;
+  
+  // Fade in with delay for lazy loading effect
+  setTimeout(() => {
+    modal.style.opacity = '1';
+  }, 50);
+  
   const focusables = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
   const closeBtn = modal.querySelector('#modal-close-btn');
   const first = focusables[0];
@@ -320,21 +330,28 @@ function openModal() {
 }
 function closeModal() {
   const modal = document.getElementById('infoModal');
-  modal.classList.remove('show');
-  unlockScroll();
-  if (__modalKeyHandler) { document.removeEventListener('keydown', __modalKeyHandler); __modalKeyHandler = null; }
-  if (__lastFocused && typeof __lastFocused.focus === 'function') { __lastFocused.focus(); }
-  
-  // Restore background interactions
-  modal.setAttribute('aria-hidden', 'true');
-  document.body.style.pointerEvents = '';
-  modal.style.pointerEvents = '';
+  // Fade out before hiding
+  modal.style.opacity = '0';
+  setTimeout(() => {
+    modal.classList.remove('show');
+    unlockScroll();
+    if (__modalKeyHandler) { document.removeEventListener('keydown', __modalKeyHandler); __modalKeyHandler = null; }
+    if (__lastFocused && typeof __lastFocused.focus === 'function') { __lastFocused.focus(); }
+    
+    // Restore background interactions
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.pointerEvents = '';
+    modal.style.pointerEvents = '';
+  }, 300);
 }
 
 function openArticleModal1() {
   const modal = document.getElementById('articleModal1');
   if (!modal) return;
   __lastFocused = document.activeElement;
+  
+  // Add lazy loading behavior like switchCards
+  modal.style.opacity = '0';
   modal.classList.add('show');
   
   // Load article content if not already loaded
@@ -344,8 +361,14 @@ function openArticleModal1() {
   const closeBtn = modal.querySelector('#article-close-btn-1');
   const first = focusables[0];
   const last = focusables[focusables.length - 1];
-  if (closeBtn) closeBtn.focus();
-  else if (first) first.focus();
+  
+  // Fade in with delay for lazy loading effect
+  setTimeout(() => {
+    modal.style.opacity = '1';
+    if (closeBtn) closeBtn.focus();
+    else if (first) first.focus();
+  }, 50);
+  
   __modalKeyHandler = (e) => {
     if (e.key === 'Escape') { closeArticleModal1(); }
     if (e.key === 'Tab') {
@@ -369,44 +392,54 @@ function openArticleModal1() {
 function closeArticleModal1() {
   const modal = document.getElementById('articleModal1');
   if (!modal) return;
-  modal.classList.remove('show');
-  // When returning from the article summary to the main info modal,
-  // ensure the main modal content is scrolled back to the top.
-  const mainInfoModal = document.getElementById('infoModal');
-  if (mainInfoModal) {
-    const mainCard = mainInfoModal.querySelector('.modal-card');
-    if (mainCard) mainCard.scrollTop = 0;
-  }
-  // Remove the article modal's key handler and restore a focus trap on the main info modal
-  if (__modalKeyHandler) {
-    document.removeEventListener('keydown', __modalKeyHandler);
-    __modalKeyHandler = null;
-  }
+  
+  // Fade out before hiding
+  modal.style.opacity = '0';
+  setTimeout(() => {
+    modal.classList.remove('show');
+    // When returning from the article summary to the main info modal,
+    // ensure the main modal content is scrolled back to the top.
+    const mainInfoModal = document.getElementById('infoModal');
+    if (mainInfoModal) {
+      const mainCard = mainInfoModal.querySelector('.modal-card');
+      if (mainCard) mainCard.scrollTop = 0;
+    }
+    // Remove the article modal's key handler and restore a focus trap on the main info modal
+    if (__modalKeyHandler) {
+      document.removeEventListener('keydown', __modalKeyHandler);
+      __modalKeyHandler = null;
+    }
 
-  if (mainInfoModal) {
-    const focusables = mainInfoModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-    const closeBtn = mainInfoModal.querySelector('#modal-close-btn');
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    __modalKeyHandler = (e) => {
-      if (e.key === 'Escape') { closeModal(); }
-      if (e.key === 'Tab') {
-        if (focusables.length === 0) { e.preventDefault(); return; }
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    };
-    document.addEventListener('keydown', __modalKeyHandler);
-    mainInfoModal.addEventListener('click', (ev) => { if (ev.target === mainInfoModal) closeModal(); }, { once: true });
-    
-    // Re-apply background interaction prevention for main modal
-    document.body.style.pointerEvents = 'none';
-    mainInfoModal.style.pointerEvents = 'auto';
-  }
-  if (closeBtn && typeof closeBtn.focus === 'function') {
-    closeBtn.focus();
-  }
-  if (__lastFocused && typeof __lastFocused.focus === 'function') { __lastFocused.focus(); }
+    // Restore background interactions
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.pointerEvents = '';
+    modal.style.pointerEvents = '';
+
+    if (mainInfoModal) {
+      const focusables = mainInfoModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const closeBtn = mainInfoModal.querySelector('#modal-close-btn');
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      __modalKeyHandler = (e) => {
+        if (e.key === 'Escape') { closeModal(); }
+        if (e.key === 'Tab') {
+          if (focusables.length === 0) { e.preventDefault(); return; }
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      };
+      document.addEventListener('keydown', __modalKeyHandler);
+      mainInfoModal.addEventListener('click', (ev) => { if (ev.target === mainInfoModal) closeModal(); }, { once: true });
+      
+      // Re-apply background interaction prevention for main modal
+      document.body.style.pointerEvents = 'none';
+      mainInfoModal.style.pointerEvents = 'auto';
+    }
+    if (closeBtn && typeof closeBtn.focus === 'function') {
+      closeBtn.focus();
+    }
+    if (__lastFocused && typeof __lastFocused.focus === 'function') { __lastFocused.focus(); }
+  }, 300);
 }
 
 // Utility: Haptic feedback for mobile devices
