@@ -301,10 +301,10 @@ function openModal() {
   const modalCard = modal.querySelector('.modal-card');
   if (modalCard) modalCard.scrollTop = 0;
   
-  // Fade in with delay for lazy loading effect
+  // Fade in with delay for lazy loading effect (matching card timing)
   setTimeout(() => {
     modal.style.opacity = '1';
-  }, 50);
+  }, 400);
   
   const focusables = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
   const closeBtn = modal.querySelector('#modal-close-btn');
@@ -330,7 +330,7 @@ function openModal() {
 }
 function closeModal() {
   const modal = document.getElementById('infoModal');
-  // Fade out before hiding
+  // Fade out before hiding (matching card timing)
   modal.style.opacity = '0';
   setTimeout(() => {
     modal.classList.remove('show');
@@ -342,7 +342,7 @@ function closeModal() {
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.pointerEvents = '';
     modal.style.pointerEvents = '';
-  }, 300);
+  }, 400);
 }
 
 function openArticleModal1() {
@@ -362,12 +362,12 @@ function openArticleModal1() {
   const first = focusables[0];
   const last = focusables[focusables.length - 1];
   
-  // Fade in with delay for lazy loading effect
+  // Fade in with delay for lazy loading effect (matching card timing)
   setTimeout(() => {
     modal.style.opacity = '1';
     if (closeBtn) closeBtn.focus();
     else if (first) first.focus();
-  }, 50);
+  }, 400);
   
   __modalKeyHandler = (e) => {
     if (e.key === 'Escape') { closeArticleModal1(); }
@@ -393,7 +393,7 @@ function closeArticleModal1() {
   const modal = document.getElementById('articleModal1');
   if (!modal) return;
   
-  // Fade out before hiding
+  // Fade out before hiding (matching card timing)
   modal.style.opacity = '0';
   setTimeout(() => {
     modal.classList.remove('show');
@@ -439,7 +439,7 @@ function closeArticleModal1() {
       closeBtn.focus();
     }
     if (__lastFocused && typeof __lastFocused.focus === 'function') { __lastFocused.focus(); }
-  }, 300);
+  }, 400);
 }
 
 // Utility: Haptic feedback for mobile devices
