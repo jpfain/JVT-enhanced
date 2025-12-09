@@ -84,6 +84,11 @@
       outline-offset: 1px;
     }
 
+    /* Hide clear button when input is empty */
+    .input-wrapper input:placeholder-shown + .input-clear {
+      display: none;
+    }
+
     input { width: 100%; max-width: 320px; text-align: center; }
 
     button {
