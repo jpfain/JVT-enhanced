@@ -51,6 +51,26 @@ window.addEventListener('load', () => {
   }, 2000);
 });
 
+// Utility: Button loading states
+function setButtonLoading(buttonId, loading = true) {
+  const button = document.getElementById(buttonId);
+  if (!button) return;
+  
+  if (loading) {
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    button.dataset.originalText = button.textContent;
+    button.textContent = 'Calculating...';
+    button.classList.add('loading');
+  } else {
+    button.disabled = false;
+    button.removeAttribute('aria-busy');
+    button.textContent = button.dataset.originalText || button.textContent;
+    button.classList.remove('loading');
+    delete button.dataset.originalText;
+  }
+}
+
 // Age Calculator
 function convert() {
   const ageInput = document.getElementById('age');
@@ -61,8 +81,12 @@ function convert() {
   const trimmed = raw.trim();
   const age = parseFloat(raw);
 
+  // Set loading state
+  setButtonLoading('age-calc-btn', true);
+
   // More specific validation messages
   if (!trimmed) {
+    setButtonLoading('age-calc-btn', false);
     err.textContent = 'Please enter your age.';
     ageInput.setAttribute('aria-invalid', 'true');
     ageInput.classList.add('input-error');
@@ -70,6 +94,7 @@ function convert() {
     return;
   }
   if (Number.isNaN(age)) {
+    setButtonLoading('age-calc-btn', false);
     err.textContent = 'Please enter digits only (0–9).';
     ageInput.setAttribute('aria-invalid', 'true');
     ageInput.classList.add('input-error');
@@ -77,6 +102,7 @@ function convert() {
     return;
   }
   if (age < 0) {
+    setButtonLoading('age-calc-btn', false);
     err.textContent = 'Age cannot be negative.';
     ageInput.setAttribute('aria-invalid', 'true');
     ageInput.classList.add('input-error');
@@ -86,6 +112,7 @@ function convert() {
 
   const result = computeJehovahAge(age);
   if (!result) {
+    setButtonLoading('age-calc-btn', false);
     err.textContent = 'Please enter a valid non-negative number.';
     ageInput.setAttribute('aria-invalid', 'true');
     ageInput.classList.add('input-error');
@@ -126,6 +153,9 @@ function convert() {
     r.style.opacity = '1';
     r.style.transform = 'translateY(0)';
   }, 1500);
+  
+  // Clear loading state and show reset button
+  setButtonLoading('age-calc-btn', false);
   if (resetBtn) resetBtn.style.display = 'inline-block';
   if (calcBtn) calcBtn.style.display = 'none';
 }
@@ -198,13 +228,19 @@ function calculateYears() {
   const resultEl = document.getElementById('resultBCE'), ratioEl = document.getElementById('ratio');
   const calcBtn = document.getElementById('calcBtn'), newDateBtn = document.getElementById('newDateBtn');
   const year = parseInt(yv,10);
+  
+  // Set loading state
+  setButtonLoading('calcBtn', true);
+  
   if (isNaN(year)) {
+    setButtonLoading('calcBtn', false);
     resultEl.textContent="Please enter a valid year.";
     ratioEl.textContent="";
     if (yearInput) yearInput.classList.add('input-error');
     return;
   }
   if (year < 1) {
+    setButtonLoading('calcBtn', false);
     resultEl.textContent = `Please enter a year of 1 or greater for ${era}.`;
     ratioEl.textContent = "";
     if (yearInput) yearInput.classList.add('input-error');
@@ -252,6 +288,9 @@ function calculateYears() {
     ratioEl.style.opacity='1';
     ratioEl.style.transform='translateY(0)';
   },1850);
+  
+  // Clear loading state and show reset button
+  setButtonLoading('calcBtn', false);
   calcBtn.style.display='none'; newDateBtn.style.display='inline-block';
 }
 function resetFormBCE() {
@@ -506,6 +545,41 @@ if ('serviceWorker' in navigator) navigator.serviceWorker.register('./service-wo
 window.addEventListener('DOMContentLoaded', () => {
   const byId = (id) => document.getElementById(id);
   const on = (el, ev, fn) => { if (el) el.addEventListener(ev, fn); };
+
+  // Input clear buttons
+  const ageClear = byId('age-clear');
+  const yearClear = byId('year-clear');
+  
+  if (ageClear) {
+    on(ageClear, 'click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const ageInput = byId('age');
+      if (ageInput) {
+        ageInput.value = '';
+        ageInput.focus();
+        // Clear any error state
+        const err = byId('age-error');
+        if (err) err.textContent = '';
+        ageInput.removeAttribute('aria-invalid');
+        ageInput.classList.remove('input-error');
+      }
+    });
+  }
+  
+  if (yearClear) {
+    on(yearClear, 'click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const yearInput = byId('yearInput');
+      if (yearInput) {
+        yearInput.value = '';
+        yearInput.focus();
+        // Clear any error state
+        yearInput.classList.remove('input-error');
+      }
+    });
+  }
 
   // Hide the "How to install" hint if already running as an installed app
   try {

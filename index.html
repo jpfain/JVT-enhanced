@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Jehovah’s View of Time</title>
+  <title>Jehovah's View of Time - Enhanced</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <meta name="description" content="Calculate your age and historical dates in Jehovah’s view of time, with BCE/CE conversion and a polished PWA experience.">
@@ -68,7 +68,10 @@
   <!-- Age Calculator -->
   <div class="card hidden start-opacity-0" id="age-card">
     <h2 tabindex="-1">How old are you in Jehovah's eyes?</h2>
-    <input id="age" inputmode="decimal" pattern="[0-9,.]*" placeholder="Enter your age" step="0.01" min="0" aria-describedby="age-help age-error" aria-label="Age">
+    <div class="input-wrapper">
+      <input id="age" inputmode="decimal" pattern="[0-9,.]*" placeholder="Enter your age" step="0.01" min="0" aria-describedby="age-help age-error" aria-label="Age">
+      <button type="button" class="input-clear" id="age-clear" aria-label="Clear age input">×</button>
+    </div>
     <div id="age-help" class="help-text">Enter your age in years (decimals allowed).</div>
     <div id="age-error" class="age-error" aria-live="polite"></div>
     <div class="mt-8">
@@ -92,12 +95,15 @@
 
   <div class="input-row">
     <label for="yearInput">Year</label>
-    <input
+    <div class="input-wrapper">
+      <input
   id="yearInput"
   inputmode="numeric"
   pattern="[0-9]*"
-  placeholder="Enter date (e.g. 607)""
+  placeholder="Enter date (e.g. 607)"
 >
+      <button type="button" class="input-clear" id="year-clear" aria-label="Clear year input">×</button>
+    </div>
     <select id="eraInput" aria-label="Era">
       <option value="BCE">BCE</option>
       <option value="CE" selected>CE</option>
