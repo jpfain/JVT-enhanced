@@ -51,6 +51,46 @@ window.addEventListener('load', () => {
   }, 2000);
 });
 
+// Utility: Success celebration animations
+function triggerSuccessAnimation(elementId) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+  
+  // Add pulse animation
+  element.classList.add('success-celebration');
+  
+  // Create sparkle effects
+  const rect = element.getBoundingClientRect();
+  const sparkleCount = 6;
+  
+  for (let i = 0; i < sparkleCount; i++) {
+    setTimeout(() => {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'success-sparkle';
+      
+      // Random position around the element
+      const angle = (i / sparkleCount) * Math.PI * 2;
+      const distance = 30;
+      const x = rect.left + rect.width / 2 + Math.cos(angle) * distance;
+      const y = rect.top + rect.height / 2 + Math.sin(angle) * distance;
+      
+      sparkle.style.left = x + 'px';
+      sparkle.style.top = y + 'px';
+      sparkle.style.position = 'fixed';
+      
+      document.body.appendChild(sparkle);
+      
+      // Remove sparkle after animation
+      setTimeout(() => sparkle.remove(), 800);
+    }, i * 100);
+  }
+  
+  // Remove celebration class after animation
+  setTimeout(() => {
+    element.classList.remove('success-celebration');
+  }, 600);
+}
+
 // Utility: Button loading states
 function setButtonLoading(buttonId, loading = true) {
   const button = document.getElementById(buttonId);
@@ -152,6 +192,8 @@ function convert() {
   setTimeout(() => {
     r.style.opacity = '1';
     r.style.transform = 'translateY(0)';
+    // Trigger success animation when result appears
+    triggerSuccessAnimation('result');
   }, 1500);
   
   // Clear loading state and show reset button
@@ -287,6 +329,8 @@ function calculateYears() {
   setTimeout(()=>{
     ratioEl.style.opacity='1';
     ratioEl.style.transform='translateY(0)';
+    // Trigger success animation when final result appears
+    triggerSuccessAnimation('ratio');
   },1850);
   
   // Clear loading state and show reset button
